@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker-compose build --force-rm --no-cache
+          docker compose build --force-rm --no-cache
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -105,4 +105,4 @@ jobs:
     steps:
       - name: Run Docker images
         run: |
-          docker-compose up -d --remove-orphans
+          docker compose up -d --remove-orphans
