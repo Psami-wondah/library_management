@@ -75,11 +75,6 @@ jobs:
           mysql --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mysql --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
 
-      - name: Update Browser list
-        working-directory: ./frappe-bench
-        run: |
-          cd frappe && npx browserslist@latest --update-db
-
       - name: Install
         working-directory: ./frappe-bench
         run: |
