@@ -13,8 +13,6 @@ concurrency:
 jobs:
   tests:
     runs-on: self-hosted
-    container:
-      options: --user sammy
     strategy:
       fail-fast: false
     name: Server
