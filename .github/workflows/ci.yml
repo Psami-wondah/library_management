@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker compose build --force-rm --no-cache
+          docker compose build
 
       - name: Setup Python
         uses: actions/setup-python@v2
