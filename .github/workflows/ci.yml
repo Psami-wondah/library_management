@@ -41,6 +41,9 @@ jobs:
           node-version: 14
           check-latest: true
 
+      - name: Install Yarn
+        run: npm install -g yarn
+
       - name: Cache pip
         uses: actions/cache@v2
         with:
