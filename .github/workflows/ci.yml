@@ -27,18 +27,12 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
       redis-cache:
         image: redis:alpine
-        ports:
-          - 6379:6379
 
       redis-queue:
         image: redis:alpine
-        ports:
-          - 6379:6379
 
       redis-socketio:
         image: redis:alpine
-        ports:
-          - 6379:6379
 
     steps:
       - name: Clone
