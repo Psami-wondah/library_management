@@ -11,11 +11,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tests:
+  build:
     runs-on: self-hosted
     strategy:
       fail-fast: false
-    name: Server
+    name: build
 
     services:
       mariadb:
@@ -78,9 +78,9 @@ jobs:
         working-directory: ./frappe-bench
         run: |
           bench get-app library_management $GITHUB_WORKSPACE
-          bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app library_management
+          bench --site test_site add-to-hosts
           bench build
         env:
           CI: "Yes"
@@ -92,3 +92,13 @@ jobs:
           bench --site test_site run-tests --app library_management
         env:
           TYPE: server
+  run:
+    runs-on: self-hosted
+    needs:
+      - build
+
+    steps:
+      - name: Run Bench
+        working-directory: ./frappe-bench
+        run: |
+          bench start
