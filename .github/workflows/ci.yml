@@ -91,6 +91,7 @@ jobs:
 
       - name: Setup
         run: |
+          sudo apt install redis-server 
           pip install -U frappe-bench
       - name: Setup Bench
         run: |
@@ -123,7 +124,12 @@ jobs:
           bench --site test_site run-tests --app library_management
         env:
           TYPE: server
+    run:
+      runs-on: self-hosted
+      needs:
+        - build
       - name: Run Bench
         working-directory: ./frappe-bench
         run: |
+          pip install -U frappe-bench
           bench start
