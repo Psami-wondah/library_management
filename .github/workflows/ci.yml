@@ -110,9 +110,9 @@ jobs:
           bench new-site --db-root-password root --admin-password admin test_site --no-mariadb-socket
           bench --site test_site install-app library_management
           bench --site test_site add-to-hosts
-          bench set-config -g redis_cache redis://127.0.0.1:6379
-          bench set-config -g redis_queue redis://127.0.0.1:6379
-          bench set-config -g redis_socketio redis://127.0.0.1:6379
+          bench set-config -g redis_cache redis://redis-cache:6379
+          bench set-config -g redis_queue redis://redis-queue:6379
+          bench set-config -g redis_socketio redis://redis-socketio:6379
         env:
           CI: "Yes"
 
@@ -125,8 +125,42 @@ jobs:
           TYPE: server
   run:
     runs-on: self-hosted
+    name: build
     needs:
       - build
+
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+      redis-cache:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis-queue:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis-socketio:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Run Bench
         working-directory: ./frappe-bench
