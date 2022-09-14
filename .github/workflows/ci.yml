@@ -67,8 +67,6 @@ jobs:
       - name: Setup Bench
         run: |
           bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ./frappe-bench
-          mysql --host mariadb --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
-          mysql --host mariadb --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
 
       - name: Update Browser list
         working-directory: ./frappe-bench
