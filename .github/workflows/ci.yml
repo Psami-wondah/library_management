@@ -44,7 +44,6 @@ jobs:
       - name: Install Yarn
         run: |
           npm install -g yarn
-          npx browserslist@latest --update-db
 
       - name: Cache pip
         uses: actions/cache@v2
@@ -79,6 +78,7 @@ jobs:
       - name: Install
         working-directory: ./frappe-bench
         run: |
+          cd frappe && npx browserslist@latest --update-db
           bench get-app library_management $GITHUB_WORKSPACE
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app library_management
