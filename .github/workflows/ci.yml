@@ -95,8 +95,8 @@ jobs:
       - name: Setup Bench
         run: |
           bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ./frappe-bench
-          mysql --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
-          mysql --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
+          mysql --host mariadb --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
+          mysql --host mariadb --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
 
       - name: Update Browser list
         working-directory: ./frappe-bench
@@ -110,9 +110,9 @@ jobs:
           bench new-site --db-root-password root --admin-password admin tenants.psami.com --no-mariadb-socket
           bench --site tenants.psami.com install-app library_management
           bench --site tenants.psami.com add-to-hosts
-          bench set-config -g redis_cache redis://127.0.0.1:6379
-          bench set-config -g redis_queue redis://127.0.0.1:6379
-          bench set-config -g redis_socketio redis://127.0.0.1:6379
+          bench set-config -g redis_cache redis://redis-cache:6379
+          bench set-config -g redis_queue redis://redis-queue:6379
+          bench set-config -g redis_socketio redis://redis-socketio:6379
         env:
           CI: "Yes"
 
@@ -129,42 +129,13 @@ jobs:
     needs:
       - build
 
-    services:
-      mariadb:
-        image: mariadb:10.6
-        env:
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+  run:
+    runs-on: self-hosted
 
-      redis-cache:
-        image: redis:alpine
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-      redis-queue:
-        image: redis:alpine
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-      redis-socketio:
-        image: redis:alpine
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    needs:
+      - build
 
     steps:
-      - name: Run Bench
-        working-directory: ./frappe-bench
+      - name: Run Docker images
         run: |
-          pip install -U frappe-bench
-          bench start
+          docker compose up -d --remove-orphans
