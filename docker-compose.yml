@@ -24,6 +24,7 @@ services:
     image: redis:alpine
 
   frappe:
+    build: .
     command: bench start
     working_dir: ./frappe-bench
 
