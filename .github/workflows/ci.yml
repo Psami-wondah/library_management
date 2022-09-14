@@ -97,9 +97,6 @@ jobs:
           bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ./frappe-bench
           mysql --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mysql --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
-          bench set-config -g redis_cache redis://127.0.0.1:6379
-          bench set-config -g redis_queue redis://127.0.0.1:6379
-          bench set-config -g redis_socketio redis://127.0.0.1:6379
 
       - name: Update Browser list
         working-directory: ./frappe-bench
@@ -113,6 +110,9 @@ jobs:
           bench new-site --db-root-password root --admin-password admin test_site --no-mariadb-socket
           bench --site test_site install-app library_management
           bench --site test_site add-to-hosts
+          bench set-config -g redis_cache redis://127.0.0.1:6379
+          bench set-config -g redis_queue redis://127.0.0.1:6379
+          bench set-config -g redis_socketio redis://127.0.0.1:6379
         env:
           CI: "Yes"
 
