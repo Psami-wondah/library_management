@@ -75,6 +75,11 @@ jobs:
           mysql --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mysql --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
 
+      - name: Update Browser list
+        working-directory: ./frappe-bench
+        run: |
+          cd apps/frappe && npx browserslist@latest --update-db
+
       - name: Install
         working-directory: ./frappe-bench
         run: |
@@ -82,7 +87,7 @@ jobs:
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app library_management
           bench --site test_site add-to-hosts
-          cd frappe && bench build
+          cd apps/frappe && bench build
         env:
           CI: "Yes"
 
