@@ -42,7 +42,9 @@ jobs:
           check-latest: true
 
       - name: Install Yarn
-        run: npm install -g yarn
+        run: |
+          npm install -g yarn
+          npx browserslist@latest --update-db
 
       - name: Cache pip
         uses: actions/cache@v2
