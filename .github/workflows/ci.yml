@@ -92,7 +92,7 @@ jobs:
         working-directory: ./frappe-bench
         run: |
           bench get-app library_management $GITHUB_WORKSPACE
-          bench new-site --db-root-password root --admin-password admin test_site
+          bench new-site --db-root-password root --admin-password admin test_site --no-mariadb-socket
           bench --site test_site install-app library_management
           bench --site test_site add-to-hosts
           bench set-config -g redis_cache redis://redis-cache:6379
