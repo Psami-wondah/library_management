@@ -107,20 +107,20 @@ jobs:
         working-directory: ./frappe-bench
         run: |
           bench get-app library_management $GITHUB_WORKSPACE
-          bench new-site --db-root-password root --admin-password admin test_site --no-mariadb-socket
-          bench --site test_site install-app library_management
-          bench --site test_site add-to-hosts
-          bench set-config -g redis_cache redis://redis-cache:6379
-          bench set-config -g redis_queue redis://redis-queue:6379
-          bench set-config -g redis_socketio redis://redis-socketio:6379
+          bench new-site --db-root-password root --admin-password admin tenants.psami.com --no-mariadb-socket
+          bench --site tenants.psami.com install-app library_management
+          bench --site tenants.psami.com add-to-hosts
+          bench set-config -g redis_cache redis://127.0.0.1:6379
+          bench set-config -g redis_queue redis://127.0.0.1:6379
+          bench set-config -g redis_socketio redis://127.0.0.1:6379
         env:
           CI: "Yes"
 
       - name: Run Tests
         working-directory: ./frappe-bench
         run: |
-          bench --site test_site set-config allow_tests true
-          bench --site test_site run-tests --app library_management
+          bench --site tenants.psami.com set-config allow_tests true
+          bench --site tenants.psami.com run-tests --app library_management
         env:
           TYPE: server
   run:
